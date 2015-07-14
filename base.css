@@ -1,0 +1,60 @@
+table {
+  width: 100%;
+}
+
+.container {
+  display: block;
+  max-width: 600px;
+  margin: 0 auto;
+  clear: both;
+}
+
+td.content-wrap > table > tbody > tr > td {
+  position:relative;
+  cursor: move;
+  border: 2px dashed rgba(255,255,255,0);
+}
+
+td.content-wrap > table > tbody > tr > td:hover {
+  border: 2px dashed #cecece;
+}
+
+td.content-block {
+  padding: 10px;
+}
+
+a.delete {
+  display:none;
+  padding:3px;
+  line-height:8px;
+  cursor:pointer;
+  position:absolute;
+  right:0px;
+  top:2px;
+  text-decoration: none;
+  color: #333333;
+}
+
+/*form { text-align: center; }*/
+
+button {
+  width: 55px;
+  height: 55px;
+  font-size: 18px;
+  color: #909090;
+  background-color: #cecece;
+  border: none;
+}
+
+button:hover {
+  color: #cecece;
+  background-color: #909090;
+}
+
+*[contenteditable]:hover {
+  cursor: text;
+}
+
+.centered {
+  text-align: center;
+}
