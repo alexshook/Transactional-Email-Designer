@@ -54,6 +54,12 @@
       removeItem($this);
     });
 
+    // must use delegate for click event
+    // because .content-block is also .sortable
+    list.delegate('.content-block', 'click', function(e) {
+      e.preventDefault();
+    });
+
     function removeElement() {
       return "<a href='#' class='delete'>[x]</a>";
     }
@@ -87,7 +93,7 @@
         .fadeIn();
 
       currentItem++;
-    };
+    }
 
     function removeItem($this) {
       var parentId = $this.parent().attr('id');
@@ -96,38 +102,8 @@
       $this.parent().fadeOut(function() {
           $this.parent().remove();
       });
-    };
-
-    // function getSelectionText() {
-    // var text = "";
-    // if (window.getSelection) {
-    //     text = window.getSelection().toString();
-    // } else if (document.selection && document.selection.type != "Control") {
-    //     text = document.selection.createRange().text;
-    // }
-    // return text;
-    // }
-
-    // $(".list-item").select(function() {
-    //   alert(this.getSelectionText());
-    // });
-
-    // $(".list-item").select(function() {
-    //   alert('selected');
-    // });
-
-    $('.list-item').on('click', function(){
-    var text = "";
-    if (window.getSelection) {
-        text = window.getSelection().toString();
-    } else if (document.selection && document.selection.type != "Control") {
-        text = document.selection.createRange().text;
     }
 
-    alert(text);
-});
-
     return this;
-
-  };
+  }
 }( jQuery ));
