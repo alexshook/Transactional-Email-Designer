@@ -1,14 +1,16 @@
-(function( $ ) {
+(function($) {
 
-  $.fn.listable = function( options ) {
+  $.fn.listable = function(options) {
     var settings = $.extend({
       addListItemButton: $('#add-list-item'),
-      listItemPlaceholder: 'New List Item'
+      listItemPlaceholder: 'New List Item',
+      addLinkToTextButton: $('#add-link')
     }, options );
 
     var currentItem = 1;
     var list = this;
     var addListItemButton = settings.addListItemButton;
+    var addLinkToTextButton = settings.addLinkToTextButton;
 
     // Using the jQuery sortable plugin, let's enable
     // drag and drop sorting
@@ -30,20 +32,32 @@
       }
     });
 
+    addListItemButton.click(function(e) {
+      e.preventDefault();
+      addItem('listItem');
+    });
+
+    addLinkToTextButton.click(function(e) {
+      e.preventDefault();
+      var selectedText = getSelectedText();
+      addLinktoSelectedText(selectedText, selectedElement);
+    });
+
     // Fade In and Fade Out the Remove link on hover
     list.delegate('tr', 'mouseover mouseout', function(event) {
       var $this = $(this).find('a.delete');
 
       if(event.type === 'mouseover') {
-          $this.stop(true, true).fadeIn();
+        $this.stop(true, true).fadeIn();
       } else {
-          $this.stop(true, true).fadeOut();
+        $this.stop(true, true).fadeOut();
       }
     });
 
-    addListItemButton.click(function(e) {
+    // must use delegate for click event
+    // because .content-block is also .sortable
+    list.delegate('.content-block', 'click', function(e) {
       e.preventDefault();
-      addItem('listItem');
     });
 
     // Delete item button clicked
@@ -54,12 +68,6 @@
       removeItem($this);
     });
 
-    // must use delegate for click event
-    // because .content-block is also .sortable
-    list.delegate('.content-block', 'click', function(e) {
-      e.preventDefault();
-    });
-
     function removeElement() {
       return "<a href='#' class='delete'>[x]</a>";
     }
@@ -67,7 +75,9 @@
     function listItemElement() {
       return "<tr id='item-" + currentItem + "'>"
       + "<td class='content-block'>"
-      + "<div class='list-item' contenteditable='true'>"
+      + "<div id='list-item-"
+      + currentItem
+      + "' class='list-item' contenteditable='true'>"
       + settings.listItemPlaceholder
       + "</div>" + removeElement()
       + "</td></tr>";
@@ -100,10 +110,39 @@
 
       // Fade out the list item then remove from DOM
       $this.parent().fadeOut(function() {
-          $this.parent().remove();
+        $this.parent().remove();
       });
     }
 
-    return this;
+    // Functions for the add link to text behavior
+    // get selected text and element for adding internal and external links
+    // note that selectedElement is in the global namespace
+    // this is so we can target the correct element based on click event
+    $('.content-wrap').mouseup(function(e) {
+      selected = getSelectedText();
+      var targetId = e.target.id.toLowerCase();
+      selectedElement = document.getElementById(targetId);
+    });
+    $('.content-wrap').mousedown(function(e) {
+      selected = getSelectedText();
+      var targetId = e.target.id.toLowerCase();
+      selectedElement = document.getElementById(targetId);
+    });
+
+    function getSelectedText() {
+      $('.display-text-for-test').empty();
+      var selectedText;
+      if (window.getSelection) {
+        selectedText = window.getSelection().toString();
+      } else if (document.selection && document.selection.type != "Control") {
+        selectedText = document.selection.createRange().text;
+      }
+    return selectedText;
+    }
+
+    function addLinktoSelectedText(selectedText, selectedElement) {
+    }
+
+  return this;
   }
 }( jQuery ));
